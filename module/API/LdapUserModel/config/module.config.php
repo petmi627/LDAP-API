@@ -11,6 +11,7 @@ return [
     'service_manager' => [
         'factories' => [
             Storage\Ldap\LdapUserLdapStorage::class => Storage\Ldap\LdapUserLdapStorageFactory::class,
+            Repository\LdapUserRepositoryInterface::class => Repository\LdapUserRepositoryFactory::class,
         ]
     ]
 ];
