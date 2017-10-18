@@ -8,5 +8,9 @@
 namespace API\LdapUserModel;
 
 return [
-
+    'service_manager' => [
+        'factories' => [
+            Storage\Ldap\LdapUserLdapStorage::class => Storage\Ldap\LdapUserLdapStorageFactory::class,
+        ]
+    ]
 ];
