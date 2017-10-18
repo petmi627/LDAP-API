@@ -20,5 +20,6 @@ return [
     'Zend\Validator',
     'ZendDeveloperTools',
     'Application',
-    'API\LdapUserModel'
+    'API\LdapUserModel',
+    'API\ApiFrontend'
 ];
