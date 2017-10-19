@@ -17,11 +17,22 @@ return [
                 'options' => [
                     'route' => '/api/user[/:id]',
                     'defaults' => [
-                        'controller' => Controller\RestController::class
+                        'controller' => Controller\UserRestController::class
                     ]
                 ]
             ]
         ]
     ],
 
+    'controllers' => [
+        'factories' => [
+            Controller\UserRestController::class => Controller\UserRestControllerFactory::class
+        ]
+    ],
+
+    'view_manager' => [
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
+    ],
 ];
