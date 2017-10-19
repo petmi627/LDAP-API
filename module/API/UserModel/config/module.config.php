@@ -8,5 +8,9 @@
 namespace API\UserModel;
 
 return [
-
+    'service_manager' => [
+        'factories' => [
+            Storage\Db\UserDbStorage::class => Storage\Db\UserDbStorageFactory::class,
+        ]
+    ]
 ];

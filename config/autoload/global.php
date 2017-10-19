@@ -12,5 +12,9 @@
  */
 
 return [
-    // ...
+    'service_manager' => [
+        'factories' => [
+            \Zend\Db\Adapter\Adapter::class => \Zend\Db\Adapter\AdapterServiceFactory::class,
+        ]
+    ]
 ];
