@@ -7,6 +7,21 @@
 
 namespace API\ApiFrontend;
 
+use Zend\Router\Http\Segment;
+
 return [
+    'router' => [
+        'routes' => [
+            'api' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/user[/:id]',
+                    'defaults' => [
+                        'controller' => Controller\RestController::class
+                    ]
+                ]
+            ]
+        ]
+    ],
 
 ];
