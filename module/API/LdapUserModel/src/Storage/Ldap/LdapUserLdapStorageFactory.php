@@ -10,6 +10,7 @@ namespace API\LdapUserModel\Storage\Ldap;
 
 use API\LdapUserModel\Hydrator\LdapUserHydrator;
 use Interop\Container\ContainerInterface;
+use Zend\Config\Config;
 use Zend\Ldap\Ldap;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -18,7 +19,7 @@ class LdapUserLdapStorageFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = $container->get('Config');
-        $options = $config->get('ldap');
+        $options = $config['ldap'];
 
         $storage = new LdapUserLdapStorage();
         $storage->setLdap(new Ldap($options));

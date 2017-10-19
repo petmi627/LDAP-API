@@ -7,11 +7,19 @@
 
 namespace API\LdapUserModel;
 
+use Zend\ServiceManager\Factory\InvokableFactory;
+
 return [
     'service_manager' => [
         'factories' => [
             Storage\Ldap\LdapUserLdapStorage::class => Storage\Ldap\LdapUserLdapStorageFactory::class,
             Repository\LdapUserRepositoryInterface::class => Repository\LdapUserRepositoryFactory::class,
+        ]
+    ],
+
+    'hydrators' => [
+        'factories' => [
+            Hydrator\LdapUserHydrator::class => InvokableFactory::class,
         ]
     ]
 ];

@@ -8,6 +8,7 @@
 namespace API\LdapUserModel\Storage\Ldap;
 
 
+use API\LdapUserModel\Entity\LdapUserEntity;
 use API\LdapUserModel\Hydrator\LdapUserHydrator;
 use API\LdapUserModel\Storage\LdapUserStorageInterface;
 use Zend\Ldap\Ldap;
@@ -43,8 +44,12 @@ class LdapUserLdapStorage implements LdapUserStorageInterface
     public function searchForCn($cn)
     {
         $this->ldap->bind();
-        $hm = $this->ldap->getEntry($cn);
+        $result = $this->ldap->getEntry($cn);
 
-        var_dump($hm);
+        $entity = new LdapUserEntity();
+
+        $this->hydrator->hydrate($result, $entity);
+
+        return $entity;
     }
 }
