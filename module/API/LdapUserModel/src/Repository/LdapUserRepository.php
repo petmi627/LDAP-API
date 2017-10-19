@@ -25,8 +25,12 @@ class LdapUserRepository implements LdapUserRepositoryInterface
         $this->ldapUserStorage = $ldapUserStorage;
     }
 
-    public function getUserByCn($cn)
+    public function getUserByDn($dn)
     {
-        return $this->ldapUserStorage->searchForCn($cn);
+        return $this->ldapUserStorage->searchForDn($dn);
+    }
+
+    public function searchUser($query, $filter) {
+        return $this->ldapUserStorage->search($query, $filter);
     }
 }

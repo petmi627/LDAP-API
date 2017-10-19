@@ -10,5 +10,5 @@ namespace API\LdapUserModel\Repository;
 
 interface LdapUserRepositoryInterface
 {
-    public function getUserByCn($cn);
+    public function getUserByDn($dn);
 }

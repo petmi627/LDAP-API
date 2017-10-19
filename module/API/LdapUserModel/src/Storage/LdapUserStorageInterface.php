@@ -10,5 +10,5 @@ namespace API\LdapUserModel\Storage;
 
 interface LdapUserStorageInterface
 {
-    public function searchForCn($cn);
+    public function searchForDn($dn);
 }
