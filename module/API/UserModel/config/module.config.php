@@ -7,11 +7,19 @@
 
 namespace API\UserModel;
 
+use Zend\ServiceManager\Factory\InvokableFactory;
+
 return [
     'service_manager' => [
         'factories' => [
             Storage\Db\UserDbStorage::class => Storage\Db\UserDbStorageFactory::class,
             Repository\UserRepositoryInterface::class => Repository\UserRepositoryFactory::class,
+        ]
+    ],
+
+    'hydrators' => [
+        'factories' => [
+            Hydrator\UserHydrator::class => InvokableFactory::class
         ]
     ]
 ];

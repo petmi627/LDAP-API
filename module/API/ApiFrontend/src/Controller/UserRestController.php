@@ -11,6 +11,9 @@ namespace API\ApiFrontend\Controller;
 use API\LdapUserModel\Entity\LdapUserEntity;
 use API\LdapUserModel\Hydrator\LdapUserHydrator;
 use API\LdapUserModel\Repository\LdapUserRepository;
+use API\UserModel\Hydrator\UserHydrator;
+use API\UserModel\Repository\UserRepository;
+use API\UserModel\Repository\UserRepositoryInterface;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
@@ -27,6 +30,16 @@ class UserRestController extends AbstractRestfulController
     private $ldapUserHydrator;
 
     /**
+     * @var UserRepositoryInterface | UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var UserHydrator
+     */
+    private $userHydrator;
+
+    /**
      * @param LdapUserRepository $ldapUserRepository
      */
     public function setLdapUserRepository($ldapUserRepository)
@@ -37,10 +50,25 @@ class UserRestController extends AbstractRestfulController
     /**
      * @param LdapUserHydrator $ldapUserHydrator
      */
-    public function setLdapUserHydrator($ldapUserHydrator)
+    public function setLdapUserHydrator(LdapUserHydrator $ldapUserHydrator)
     {
         $this->ldapUserHydrator = $ldapUserHydrator;
     }
+
+    /**
+     * @param UserRepository|UserRepositoryInterface $userRepository
+     */
+    public function setUserRepository(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    public function setUserHydrator(UserHydrator $hydrator)
+    {
+        $this->userHydrator = $hydrator;
+    }
+
+
 
 
 

@@ -10,6 +10,8 @@ namespace API\ApiFrontend\Controller;
 
 use API\LdapUserModel\Hydrator\LdapUserHydrator;
 use API\LdapUserModel\Repository\LdapUserRepositoryInterface;
+use API\UserModel\Hydrator\UserHydrator;
+use API\UserModel\Repository\UserRepositoryInterface;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -25,6 +27,12 @@ class UserRestControllerFactory implements FactoryInterface
         );
         $controller->setLdapUserHydrator(
             $hydratorManager->get(LdapUserHydrator::class)
+        );
+        $controller->setUserRepository(
+            $container->get(UserRepositoryInterface::class)
+        );
+        $controller->setUserHydrator(
+            $hydratorManager->get(UserHydrator::class)
         );
 
         return $controller;
