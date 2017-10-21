@@ -12,7 +12,7 @@ use Zend\Router\Http\Segment;
 return [
     'router' => [
         'routes' => [
-            'api' => [
+            'api-user' => [
                 'type' => Segment::class,
                 'options' => [
                     'route' => '/api/user[/:id]',
@@ -20,13 +20,23 @@ return [
                         'controller' => Controller\UserRestController::class
                     ]
                 ]
-            ]
+            ],
+            'api-group' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/group[/:id]',
+                    'defaults' => [
+                        'controller' => Controller\GroupRestController::class
+                    ]
+                ]
+            ],
         ]
     ],
 
     'controllers' => [
         'factories' => [
-            Controller\UserRestController::class => Controller\UserRestControllerFactory::class
+            Controller\UserRestController::class => Controller\UserRestControllerFactory::class,
+            Controller\GroupRestController::class => Controller\GroupRestControllerFactory::class,
         ]
     ],
 
