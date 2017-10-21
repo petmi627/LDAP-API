@@ -12,6 +12,7 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 return [
     'service_manager' => [
         'factories' => [
+            Config\UserConfigInterface::class => Config\UserConfigFactory::class,
             Storage\Db\UserDbStorage::class => Storage\Db\UserDbStorageFactory::class,
             Repository\UserRepositoryInterface::class => Repository\UserRepositoryFactory::class,
         ]
