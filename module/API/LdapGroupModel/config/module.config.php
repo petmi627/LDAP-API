@@ -7,6 +7,18 @@
 
 namespace API\LdapGroupModel;
 
-return [
+use Zend\ServiceManager\Factory\InvokableFactory;
 
+return [
+    'service_manager' => [
+        'factories' => [
+            Storage\Ldap\LdapGroupLdapStorage::class => Storage\Ldap\LdapGroupLdapStorageFactory::class,
+        ]
+    ],
+
+    'hydrators' => [
+        'factories' => [
+            Hydrator\LdapGroupHydrator::class => InvokableFactory::class
+        ]
+    ],
 ];
