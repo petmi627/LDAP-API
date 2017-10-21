@@ -19,12 +19,27 @@ class UserRepository implements UserRepositoryInterface
     private $userStorage;
 
     /**
+     * @var array
+     */
+    private $url;
+
+    /**
      * @param mixed $userStorage
      */
     public function setUserStorage($userStorage)
     {
         $this->userStorage = $userStorage;
     }
+
+    /**
+     * @param array $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+
 
     public function getUsers()
     {
@@ -48,5 +63,31 @@ class UserRepository implements UserRepositoryInterface
     public function deleteUser(UserEntity $entity)
     {
         return $this->userStorage->deleteEntity($entity);
+    }
+
+    public function createEntityFromData(array $data = [])
+    {
+        $entity = new UserEntity();
+        $entity->setUsername($data["username"]);
+        $entity->setLanguage($data["language"]);
+        $entity->setCreated(new \DateTime());
+        $entity->setModified(new \DateTime());
+
+        return $entity;
+    }
+
+    public function getUserUrls($username, $baseUrl = null)
+    {
+        if (get_headers($this->url["base_avatar_url"] . $username . ".jpg")[0] != 'HTTP/1.1 404 Not Found') {
+            $data['avatar'] = $this->url["base_avatar_url"] . $username . ".jpg";
+        } else {
+            $data['avatar'] = $baseUrl . "/img/no-user.jpg";
+        }
+
+        if (get_headers($this->url["base_profile_url"] . $username)[0] != 'HTTP/1.1 404 Not Found') {
+            $data['profile'] = $this->url["base_profile_url"] . $username;
+        }
+
+        return $data;
     }
 }

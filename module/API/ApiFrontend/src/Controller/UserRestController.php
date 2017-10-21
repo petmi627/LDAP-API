@@ -72,34 +72,82 @@ class UserRestController extends AbstractRestfulController
 
 
 
-
-
     public function get($id)
     {
         $format = $this->params()->fromQuery('format', 'json');
         $filter = $this->params()->fromQuery('filter', 'dn');
+        $count  = $this->params()->fromQuery('count', 15);
+
+        $baseUrl = $this->getBaseUrl();
 
         if ($filter == 'dn') {
             $entity = $this->ldapUserRepository->getUserByDn($id);
             if (!$entity) {
                 return new JsonModel(['error' => 'User not found in LDAP']);
             }
+
+            $user   = $this->getUserData($entity->getSAMAccountName());
+            $url    = $this->userRepository->getUserUrls($entity->getSAMAccountName(), $baseUrl);
+            return new JsonModel(array_merge(
+                    $this->ldapUserHydrator->extract($entity),
+                    $this->userHydrator->extract($user),
+                    $url
+                )
+            );
+
         } else {
             $result = $this->ldapUserRepository->searchUser($id, $filter);
 
             if (count($result) > 0) {
+                $counter = 0;
                 /** @var LdapUserEntity $item */
                 foreach ($result as $item) {
-                    $entity[] = $this->ldapUserHydrator->extract($item);
+                    $user = $this->getUserData($item->getSAMAccountName());
+                    $url  = $this->userRepository->getUserUrls($item->getSAMAccountName()[0], $baseUrl);
+                    $data = array_merge(
+                        $this->ldapUserHydrator->extract($item),
+                        $this->userHydrator->extract($user),
+                        $url
+                    );
+
+                    $entity[] = $data;
+
+                    $counter = $counter + 1;
+                    if ($counter == $count) {
+                        break;
+                    }
                 }
 
                 return new JsonModel($entity);
-            } else if (is_null($result)) {
+            } else {
                 return new JsonModel(['error' => 'User not found in LDAP']);
             }
         }
+    }
 
 
-        return new JsonModel($this->ldapUserHydrator->extract($entity));
+    private function getUserData($username)
+    {
+        $username = $username[0];
+        $user = $this->userRepository->getUser(['username' => $username]);
+        if (!$user) {
+            $data = ['username' => $username, 'language' => 'en'];
+            $entity = $this->userRepository->createEntityFromData($data);
+            $result = $this->userRepository->saveUser($entity);
+            if ($result) {
+                $user = $this->userRepository->getUser(['username' => $username]);
+            }
+        }
+
+        return $user;
+    }
+
+    private function getBaseUrl()
+    {
+        $event = $this->getEvent();
+        $request = $event->getRequest();
+        $router = $event->getRouter();
+        $uri = $router->getRequestUri();
+        return sprintf('%s://%s%s', $uri->getScheme(), $uri->getHost(), $request->getBaseUrl());
     }
 }
