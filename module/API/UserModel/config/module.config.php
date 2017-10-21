@@ -22,5 +22,11 @@ return [
         'factories' => [
             Hydrator\UserHydrator::class => InvokableFactory::class
         ]
+    ],
+
+    'input_filters' => [
+        'factories' => [
+            InputFilter\UserInputFilter::class => InputFilter\UserInputFilterFactory::class,
+        ]
     ]
 ];
