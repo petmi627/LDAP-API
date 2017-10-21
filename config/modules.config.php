@@ -22,6 +22,7 @@ return [
     'ZendDeveloperTools',
     'Application',
     'API\LdapUserModel',
+    'API\LdapGroupModel',
     'API\UserModel',
     'API\ApiFrontend'
 ];

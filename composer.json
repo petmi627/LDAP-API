@@ -30,6 +30,7 @@
         "psr-4": {
             "Application\\"         : "module/Application/src/",
             "API\\LdapUserModel\\"  : "module/API/LdapUserModel/src",
+            "API\\LdapGroupModel\\" : "module/API/LdapGroupModel/src",
             "API\\UserModel\\"      : "module/API/UserModel/src",
             "API\\ApiFrontend\\"    : "module/API/ApiFrontend/src"
         }
