@@ -17,6 +17,7 @@ return [
     'Zend\Form',
     'Zend\Db',
     'Zend\Hydrator',
+    'Zend\InputFilter',
     'Zend\Router',
     'Zend\Validator',
     'ZendDeveloperTools',

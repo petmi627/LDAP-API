@@ -14,6 +14,6 @@ class UserConfig extends Config implements UserConfigInterface
 {
     public function getLanguageOptions()
     {
-        $this->get('language_options')->toArray();
+        return $this->get('language_options')->toArray();
     }
 }

@@ -6,5 +6,10 @@
  */
 
 return [
-    'language_options' => ['en', 'de', 'lb', 'fr'],
+    'language_options' => [
+        'en' => 'English',
+        'de' => 'German',
+        'lb' => 'Luxembourgish',
+        'fr' => 'French',
+    ],
 ];

@@ -11,6 +11,7 @@ namespace API\ApiFrontend\Controller;
 use API\LdapUserModel\Hydrator\LdapUserHydrator;
 use API\LdapUserModel\Repository\LdapUserRepositoryInterface;
 use API\UserModel\Hydrator\UserHydrator;
+use API\UserModel\InputFilter\UserInputFilter;
 use API\UserModel\Repository\UserRepositoryInterface;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
@@ -19,7 +20,8 @@ class UserRestControllerFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $hydratorManager = $container->get('HydratorManager');
+        $hydratorManager    = $container->get('HydratorManager');
+        $inputFilterManager = $container->get('InputFilterManager');
 
         $controller = new UserRestController();
         $controller->setLdapUserRepository(
@@ -33,6 +35,9 @@ class UserRestControllerFactory implements FactoryInterface
         );
         $controller->setUserHydrator(
             $hydratorManager->get(UserHydrator::class)
+        );
+        $controller->setUserInputFilter(
+            $inputFilterManager->get(UserInputFilter::class)
         );
 
         return $controller;

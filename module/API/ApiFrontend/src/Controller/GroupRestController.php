@@ -45,7 +45,6 @@ class GroupRestController extends AbstractRestfulController
 
     public function get($id)
     {
-        $format = $this->params()->fromQuery('format', 'json');
         $filter = $this->params()->fromQuery('filter', 'dn');
         $count  = $this->params()->fromQuery('count', 30);
 

@@ -20,7 +20,7 @@ class UserInputFilterFactory implements FactoryInterface
 
         $inputFilter = new UserInputFilter();
         $inputFilter->setLanguageOptions(
-            $config->getLanguageOptions()
+            array_keys($config->getLanguageOptions())
         );
 
         return $inputFilter;
