@@ -43,10 +43,21 @@ class GroupRestController extends AbstractRestfulController
         $this->ldapGroupHydrator = $ldapGroupHydrator;
     }
 
+    public function getList()
+    {
+        $q = $this->params()->fromQuery('q');
+        if ($q) {
+            return $this->get($q);
+        }
+
+        return new JsonModel(['error' => 'Param q not defined']);
+    }
+
     public function get($id)
     {
-        $filter = $this->params()->fromQuery('filter', 'dn');
-        $count  = $this->params()->fromQuery('count', 30);
+        $filter  = $this->params()->fromQuery('filter', 'dn');
+        $count   = $this->params()->fromQuery('count', 30);
+		$extract = $this->params()->fromQuery('extract', null);
 
         if ($filter == 'dn') {
             $entity = $this->ldapGroupRepository->getUserByDn($id);
@@ -57,17 +68,27 @@ class GroupRestController extends AbstractRestfulController
             return new JsonModel($this->ldapGroupHydrator->extract($entity));
         } else {
             $result = $this->ldapGroupRepository->searchUser($id, $filter);
+            $entity = [];
 
             if (count($result) > 0) {
                 $counter = 0;
                 /** @var LdapGroupEntity $item */
                 foreach ($result as $item) {
-                    $entity[] = $this->ldapGroupHydrator->extract($item);
+                    if ($extract == null) {
+						$entity[] = $this->ldapGroupHydrator->extract($item);
 
-                    $counter = $counter + 1;
-                    if ($counter == $count) {
-                        break;
-                    }
+						$counter = $counter + 1;
+						if ($counter == $count) {
+							break;
+						}
+					} else {
+						$entity[] = $item->$extract()[0];
+
+						$counter = $counter + 1;
+						if ($counter == $count) {
+							break;
+						}
+					}
                 }
 
                 return new JsonModel($entity);
@@ -78,6 +99,4 @@ class GroupRestController extends AbstractRestfulController
 
         }
     }
-
-
 }

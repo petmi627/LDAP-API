@@ -40,17 +40,27 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
-
+    /**
+     * @return UserEntity
+     */
     public function getUsers()
     {
         return $this->userStorage->fetchAll();
     }
 
+    /**
+     * @param array
+     * @return UserEntity
+     */
     public function getUser(array $whereIsEqualTo = [])
     {
         return $this->userStorage->fetchEntity($whereIsEqualTo);
     }
 
+    /**
+     * @param UserEntity $entity
+     * @return bool
+     */
     public function saveUser(UserEntity $entity)
     {
         if (!$entity->getId()) {
@@ -60,11 +70,19 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @param UserEntity $entity
+     * @return bool
+     */
     public function deleteUser(UserEntity $entity)
     {
         return $this->userStorage->deleteEntity($entity);
     }
 
+    /**
+     * @param array $data
+     * @return UserEntity
+     */
     public function createEntityFromData(array $data = [])
     {
         $entity = new UserEntity();
@@ -76,6 +94,11 @@ class UserRepository implements UserRepositoryInterface
         return $entity;
     }
 
+    /**
+     * @param string $username
+     * @param string null $baseUrl
+     * @return array
+     */
     public function getUserUrls($username, $baseUrl = null)
     {
         if (get_headers($this->url["base_avatar_url"] . $username . ".jpg")[0] != 'HTTP/1.1 404 Not Found') {
@@ -84,9 +107,8 @@ class UserRepository implements UserRepositoryInterface
             $data['avatar'] = $baseUrl . "/img/no-user.jpg";
         }
 
-        if (get_headers($this->url["base_profile_url"] . $username)[0] != 'HTTP/1.1 404 Not Found') {
-            $data['profile'] = $this->url["base_profile_url"] . $username;
-        }
+        $data['profile'] = $this->url["base_profile_url"] . $username;
+
 
         return $data;
     }

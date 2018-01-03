@@ -23,6 +23,7 @@ class LdapUserEntity
     private $physicalDeliveryOfficeName;
     private $co;
     private $mail;
+    private $objectClass;
     private $memberOf;
 
     /**
@@ -231,6 +232,14 @@ class LdapUserEntity
     public function setMail($mail)
     {
         $this->mail = $mail;
+    }
+
+    /**
+     * @param mixed $objectClass
+     */
+    public function setObjectClass($objectClass)
+    {
+        $this->objectClass = $objectClass;
     }
 
     /**

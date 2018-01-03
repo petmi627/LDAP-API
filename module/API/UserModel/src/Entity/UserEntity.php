@@ -10,10 +10,29 @@ namespace API\UserModel\Entity;
 
 class UserEntity
 {
+    /**
+     * @var integer
+     */
     private $id;
+
+    /**
+     * @var string
+     */
     private $username;
+
+    /**
+     * @var string (en|de|fr|lb)
+     */
     private $language;
+
+    /**
+     * @var object \DateTime
+     */
     private $created;
+
+    /**
+     * @var object \DateTime
+     */
     private $modified;
 
     /**

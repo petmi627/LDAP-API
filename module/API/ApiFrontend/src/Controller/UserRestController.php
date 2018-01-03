@@ -70,6 +70,9 @@ class UserRestController extends AbstractRestfulController
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param UserHydrator $hydrator
+     */
     public function setUserHydrator(UserHydrator $hydrator)
     {
         $this->userHydrator = $hydrator;
@@ -83,71 +86,96 @@ class UserRestController extends AbstractRestfulController
         $this->userInputFilter = $userInputFilter;
     }
 
+    public function getList()
+    {
+        $q = $this->params()->fromQuery('q');
+        if ($q) {
+            return $this->get($q);
+        } else {
+            return new JsonModel(['error' => 'q param not set']);
+        }
+    }
 
+    /**
+     * Get Method to get Data
+     *
+     * @param mixed $id
+     * @return JsonModel
+     */
     public function get($id)
     {
+        //Define Variable;
         $filter     = $this->params()->fromQuery('filter', 'dn');
         $count      = $this->params()->fromQuery('count', 15);
         $only_ldap  = $this->params()->fromQuery('only_ldap', false);
 
-        $baseUrl = $this->getBaseUrl();
-
+        //Check if Filter need to be applied
         if ($filter == 'dn') {
+            //Get Entity
             $entity = $this->ldapUserRepository->getUserByDn($id);
             if (!$entity) {
                 return new JsonModel(['error' => 'User not found in LDAP']);
             }
 
+            //Check if only ldap data need to be returned (is sometime faster)
             if (!$only_ldap) {
-                $user   = $this->getUserData($entity->getSAMAccountName());
-                $url    = $this->userRepository->getUserUrls($entity->getSAMAccountName(), $baseUrl);
-
-
+                //Merge all arrays and return them as Json
                 return new JsonModel(array_merge(
+                        ['id' => $entity->getSAMAccountName()],
                         $this->ldapUserHydrator->extract($entity),
-                        $this->userHydrator->extract($user),
-                        $url
+                        $this->getUrlAndUserData($entity)
                     )
                 );
             } else {
+                //Only return Ldap Data as Json
                 return new JsonModel($this->ldapUserHydrator->extract($entity));
             }
-
         } else {
+            //Search for a User
             $result = $this->ldapUserRepository->searchUser($id, $filter);
 
+            //Check if we have any LDAP results
             if (count($result) > 0) {
+                //Counter if the counter reach the number of @var count the loop will break
                 $counter = 0;
                 /** @var LdapUserEntity $item */
                 foreach ($result as $item) {
                     if (!$only_ldap) {
-                        $user = $this->getUserData($item->getSAMAccountName());
-                        $url  = $this->userRepository->getUserUrls($item->getSAMAccountName()[0], $baseUrl);
-
                         $data = array_merge(
+                            ['id' => $item->getSAMAccountName()],
                             $this->ldapUserHydrator->extract($item),
-                            $this->userHydrator->extract($user),
-                            $url
+                            $this->getUrlAndUserData($item)
                         );
                     } else {
                         $data = $this->ldapUserHydrator->extract($item);
                     }
 
+                    //Add data to an Array
                     $entity[] = $data;
 
+                    //Break if Counter reach count
                     $counter = $counter + 1;
                     if ($counter == $count) {
                         break;
                     }
                 }
 
+                //Return Data
                 return new JsonModel($entity);
             } else {
+                //Return Error
                 return new JsonModel(['error' => 'User not found in LDAP']);
             }
         }
     }
 
+    /**
+     * Put method to update language
+     *
+     * @param mixed $id
+     * @param mixed $data
+     * @return JsonModel
+     */
     public function update($id, $data)
     {
         $result = $this->ldapUserRepository->searchUser($id, 'sAMAccountName');
@@ -161,7 +189,7 @@ class UserRestController extends AbstractRestfulController
             return new JsonModel(['error' => 'User not found in LDAP']);
         }
 
-        $this->userInputFilter->setData($this->params()->fromQuery());
+        $this->userInputFilter->setData($data);
         if (!$this->userInputFilter->isValid()) {
             return new JsonModel([
                 'error'     => 'Invalid data',
@@ -171,17 +199,40 @@ class UserRestController extends AbstractRestfulController
 
         /** @var UserEntity $user */
         $language = $this->userInputFilter->getValues()['language'];
-        $user->setLanguage($language);
-
-        $result = $this->userRepository->saveUser($user);
-        if ($result) {
-            return new JsonModel(['success' => 'User was successfully updated']);
-        } else {
-            return new JsonModel(['error' => 'Error while updating User']);
-        }
+        if ($user->getLanguage() != $language) {
+			$user->setLanguage($language);
+				
+			$result = $this->userRepository->saveUser($user);
+				
+			if ($result) {
+				return new JsonModel(['success' => 'User was successfully updated']);
+			} else {
+				return new JsonModel(['error' => 'Error while updating User']);				
+			}
+		} else {
+			return new JsonModel(['info' => 'User language was not changed, Database and Input have the same value']);
+		}
     }
 
 
+    /**
+     * @param $entity
+     * @return array
+     */
+    private function getUrlAndUserData($entity)
+    {
+        $baseUrl = $this->getBaseUrl();
+
+        $data['user'] = $this->userHydrator->extract($this->getUserData($entity->getSAMAccountName()));
+        $data['url']  = $this->userRepository->getUserUrls($entity->getSAMAccountName()[0], $baseUrl);
+
+        return $data;
+    }
+
+    /**
+     * @param string $username
+     * @return UserEntity
+     */
     private function getUserData($username)
     {
         $username = $username[0];
@@ -198,6 +249,9 @@ class UserRestController extends AbstractRestfulController
         return $user;
     }
 
+    /**
+     * @return string
+     */
     private function getBaseUrl()
     {
         $event = $this->getEvent();

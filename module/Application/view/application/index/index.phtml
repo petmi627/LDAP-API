@@ -5,3 +5,67 @@
         Congratulations! You have successfully installed the LDAP Api
     </p>
 </div>
+<h1>How do I use it</h1>
+<div class="well">
+    <h2>Indroduction</h2>
+    <p>This is a Restful Ldap API, to get Information of a group or only for a user in JSON format</p>
+</div>
+<div class="well">
+    <h2>Get user information</h2>
+    <h3>Get information with DN</h3>
+    <p>With this URI you can get User Information like CN, department, avatar, ...</p>
+    <code><?= $this->basePath('api/user') ?>/{DN}</code>
+    <p>For Example</p>
+    <a href="<?= $this->basePath('api/user') ?>/CN=Andy Poull (NENG609),OU=Users,OU=LUXTIRE,OU=LUX,DC=ec,DC=ad,DC=goodyear,DC=com" target="_blank">
+        <code><?= $this->basePath('api/user') ?>/CN=Andy Poull (NENG609),OU=Users,OU=LUXTIRE,OU=LUX,DC=ec,DC=ad,DC=goodyear,DC=com</code>
+    </a>
+    <h3>Get Information with Keyword</h3>
+    <p>IT exists also a possibility to get the Information with a Keyword</p>
+    <code><?= $this->basePath('api/user') ?>/{KEYWORD}?filter={filtername}</code>
+    <p>For example</p>
+    <a href="<?= $this->basePath('api/user') ?>/Andy?filter=cn" target="_blank">
+        <code><?= $this->basePath('api/user') ?>/Andy?filter=cn</code>
+    </a>
+    <h4>Available Keywords</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Filtername</th>
+                <th>Description</th>
+                <th>Keyword Exmaple</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>samaccountname</td>
+                <td>Goodyear Username</td>
+                <td>AA43681</td>
+            </tr>
+            <tr>
+                <td>cn</td>
+                <td>Full name of a User</td>
+                <td>Mike Peters (AA43681)</td>
+            </tr>
+            <tr>
+                <td>givenname</td>
+                <td>Firstname</td>
+                <td>Mike</td>
+            </tr>
+            <tr>
+                <td>sn</td>
+                <td>Lastname</td>
+                <td>Peters</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>Associate Title</td>
+                <td>Console Operator</td>
+            </tr>
+            <tr>
+                <td>department</td>
+                <td>Associate Department</td>
+                <td>Production Information System</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
