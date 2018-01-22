@@ -110,9 +110,14 @@ class UserRestController extends AbstractRestfulController
         $only_ldap  = $this->params()->fromQuery('only_ldap', false);
 
         //Check if Filter need to be applied
-        if ($filter == 'dn') {
+        if (in_array($filter, ['dn', 'username'])) {
             //Get Entity
-            $entity = $this->ldapUserRepository->getUserByDn($id);
+            if ($filter == 'username') {
+                $entity = $this->ldapUserRepository->getUserByUsername($id);
+            } else {
+                $entity = $this->ldapUserRepository->getUserByDn($id);
+            }
+
             if (!$entity) {
                 return new JsonModel(['error' => 'User not found in LDAP']);
             }

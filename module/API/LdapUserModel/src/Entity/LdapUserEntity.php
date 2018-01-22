@@ -23,8 +23,12 @@ class LdapUserEntity
     private $physicalDeliveryOfficeName;
     private $co;
     private $mail;
+    private $manager;
     private $objectClass;
     private $memberOf;
+    private $pwdLastSet;
+    private $whenCreated;
+    private $whenChanged;
 
     /**
      * @return mixed
@@ -235,6 +239,30 @@ class LdapUserEntity
     }
 
     /**
+     * @return mixed
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @param mixed $manager
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjectClass()
+    {
+        return $this->objectClass;
+    }
+
+    /**
      * @param mixed $objectClass
      */
     public function setObjectClass($objectClass)
@@ -256,5 +284,53 @@ class LdapUserEntity
     public function setMemberOf($memberOf)
     {
         $this->memberOf = $memberOf;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPwdLastSet()
+    {
+        return $this->pwdLastSet;
+    }
+
+    /**
+     * @param mixed $pwdLastSet
+     */
+    public function setPwdLastSet($pwdLastSet)
+    {
+        $this->pwdLastSet = $pwdLastSet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWhenCreated()
+    {
+        return $this->whenCreated;
+    }
+
+    /**
+     * @param mixed $whenCreated
+     */
+    public function setWhenCreated($whenCreated)
+    {
+        $this->whenCreated = $whenCreated;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWhenChanged()
+    {
+        return $this->whenChanged;
+    }
+
+    /**
+     * @param mixed $whenChanged
+     */
+    public function setWhenChanged($whenChanged)
+    {
+        $this->whenChanged = $whenChanged;
     }
 }

@@ -75,4 +75,23 @@ class LdapUserLdapStorage implements LdapUserStorageInterface
             return $entity;
         }
     }
+
+    public function getUserByUsername($username)
+    {
+        $this->ldap->bind();
+        $result = $this->ldap->search(
+            '(&(objectClass=person)(sAMAccountName='.$username.'))'
+        );
+
+        if (count($result) > 0) {
+            $entity = new LdapUserEntity();
+            foreach ($result as $item) {
+                $entity = $this->hydrator->hydrate($item, $entity);
+            }
+        } else {
+            $entity = null;
+        }
+
+        return $entity;
+    }
 }
