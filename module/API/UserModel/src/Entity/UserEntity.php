@@ -26,6 +26,11 @@ class UserEntity
     private $language;
 
     /**
+     * @var integer
+     */
+    private $clockCardNumber;
+
+    /**
      * @var object \DateTime
      */
     private $created;
@@ -85,6 +90,22 @@ class UserEntity
         }
 
         $this->language = $language;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClockCardNumber()
+    {
+        return $this->clockCardNumber;
+    }
+
+    /**
+     * @param int $clockCardNumber
+     */
+    public function setClockCardNumber($clockCardNumber)
+    {
+        $this->clockCardNumber = $clockCardNumber;
     }
 
     /**

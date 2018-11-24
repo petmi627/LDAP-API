@@ -88,6 +88,7 @@ class UserRepository implements UserRepositoryInterface
         $entity = new UserEntity();
         $entity->setUsername($data["username"]);
         $entity->setLanguage($data["language"]);
+        $entity->setClockCardNumber(0);
         $entity->setCreated(new \DateTime());
         $entity->setModified(new \DateTime());
 

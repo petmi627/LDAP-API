@@ -104,6 +104,10 @@ class UserRestController extends AbstractRestfulController
      */
     public function get($id)
     {
+        $headers = $this->getResponse()->getHeaders();
+        $headers->addHeaderLine('Access-Control-Allow-Origin: *');
+        $headers->addHeaderLine('Access-Control-Allow-Methods: PUT, GET, POST, PATCH, DELETE, OPTIONS');
+
         //Define Variable;
         $filter     = $this->params()->fromQuery('filter', 'dn');
         $count      = $this->params()->fromQuery('count', 15);
@@ -127,13 +131,19 @@ class UserRestController extends AbstractRestfulController
                 //Merge all arrays and return them as Json
                 return new JsonModel(array_merge(
                         ['id' => $entity->getSAMAccountName()],
+                        ['text' => $entity->getCn()],
                         $this->ldapUserHydrator->extract($entity),
                         $this->getUrlAndUserData($entity)
                     )
                 );
             } else {
                 //Only return Ldap Data as Json
-                return new JsonModel($this->ldapUserHydrator->extract($entity));
+                return new JsonModel(array_merge(
+                    ['id' => $entity->getSAMAccountName()],
+                    ['text' => $entity->getCn()],
+                    $this->ldapUserHydrator->extract($entity),
+                    $this->getUrlAndUserData($entity, false)
+                ));
             }
         } else {
             //Search for a User
@@ -148,6 +158,7 @@ class UserRestController extends AbstractRestfulController
                     if (!$only_ldap) {
                         $data = array_merge(
                             ['id' => $item->getSAMAccountName()],
+                            ['text' => $item->getCn()],
                             $this->ldapUserHydrator->extract($item),
                             $this->getUrlAndUserData($item)
                         );
@@ -204,6 +215,12 @@ class UserRestController extends AbstractRestfulController
 
         /** @var UserEntity $user */
         $language = $this->userInputFilter->getValues()['language'];
+        $cc = $this->userInputFilter->getValues()['clockCardNumber'];
+
+        if ($cc) {
+            $user->setClockCardNumber($cc);
+        }
+
         if ($user->getLanguage() != $language) {
 			$user->setLanguage($language);
 				
@@ -224,12 +241,14 @@ class UserRestController extends AbstractRestfulController
      * @param $entity
      * @return array
      */
-    private function getUrlAndUserData($entity)
+    private function getUrlAndUserData($entity, $url = true)
     {
         $baseUrl = $this->getBaseUrl();
 
         $data['user'] = $this->userHydrator->extract($this->getUserData($entity->getSAMAccountName()));
-        $data['url']  = $this->userRepository->getUserUrls($entity->getSAMAccountName()[0], $baseUrl);
+        if ($url) {
+            $data['url']  = $this->userRepository->getUserUrls($entity->getSAMAccountName()[0], $baseUrl);
+        }
 
         return $data;
     }

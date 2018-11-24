@@ -55,6 +55,10 @@ class GroupRestController extends AbstractRestfulController
 
     public function get($id)
     {
+        $headers = $this->getResponse()->getHeaders();
+        $headers->addHeaderLine('Access-Control-Allow-Origin: *');
+        $headers->addHeaderLine('Access-Control-Allow-Methods: PUT, GET, POST, PATCH, DELETE, OPTIONS');
+
         $filter  = $this->params()->fromQuery('filter', 'dn');
         $count   = $this->params()->fromQuery('count', 30);
 		$extract = $this->params()->fromQuery('extract', null);

@@ -8,6 +8,7 @@
 namespace API\UserModel\InputFilter;
 
 
+use Zend\Filter\Digits;
 use Zend\Filter\StringTrim;
 use Zend\Filter\StripTags;
 use Zend\InputFilter\InputFilter;
@@ -51,6 +52,15 @@ class UserInputFilter extends InputFilter implements UserInputFilterInterface
                     ]
                 ]
             ]
+        ]);
+
+        $this->add([
+            'name'        => 'clockCardNumber',
+            'required'    => false,
+            'filter'      => [
+                ['name' => Digits::class],
+            ],
+            'validators'  => []
         ]);
     }
 }
