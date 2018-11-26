@@ -221,7 +221,7 @@ class UserRestController extends AbstractRestfulController
             $user->setClockCardNumber($cc);
         }
 
-        if ($user->getLanguage() != $language) {
+        if ($user->getLanguage() != $language || $user->getClockCardNumber()) {
 			$user->setLanguage($language);
 				
 			$result = $this->userRepository->saveUser($user);
